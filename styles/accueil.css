@@ -1,0 +1,267 @@
+/* Polices SIL OFL 1.1 (fonts/LICENSE-*.txt) */
+@font-face { font-family: "CAU Fraktur"; src: url("../fonts/unifrakturcook-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "CAU Garamond"; src: url("../fonts/eb-garamond-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "CAU Garamond"; src: url("../fonts/eb-garamond-latin-400-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "CAU Garamond"; src: url("../fonts/eb-garamond-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "CAU Limelight"; src: url("../fonts/limelight-latin-400-normal.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "CAU Special Elite"; src: url("../fonts/special-elite-latin-400-normal.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "CAU Playfair"; src: url("../fonts/playfair-display-latin-900-normal.woff2") format("woff2"); font-weight: 900; font-display: swap; }
+@font-face { font-family: "CAU Inter"; src: url("../fonts/inter-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "CAU Inter"; src: url("../fonts/inter-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "CAU Inter"; src: url("../fonts/inter-latin-800-normal.woff2") format("woff2"); font-weight: 800; font-display: swap; }
+@font-face { font-family: "CAU Mono"; src: url("../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "CAU Mono"; src: url("../fonts/ibm-plex-mono-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+
+/* ==================================================================
+   Le calque : fond transparent, seuls les éléments reçoivent les clics.
+   Sous les fenêtres de Foundry (fiches, journaux), au-dessus de l'interface.
+   ================================================================== */
+#cau-ecran { position: fixed; inset: 0; z-index: 70; pointer-events: none; outline: none;
+  --papier: #efe8d6; --encre: #2a2117; --rouge: #a3161c; --titre: "CAU Limelight", Georgia, serif; --texte: "CAU Garamond", Georgia, serif; --tete: "CAU Fraktur", serif; }
+#cau-ecran.cau-2026 { --papier: #fbfbf8; --encre: #141414; --rouge: #d1121c; --titre: "CAU Playfair", Georgia, serif; --texte: "CAU Inter", "Segoe UI", sans-serif; --tete: "CAU Playfair", Georgia, serif; }
+#cau-ecran button { font-family: inherit; }
+#cau-ecran .cau-scene { position: absolute; left: 50%; top: 50%; width: 1600px; height: 1000px; transform-origin: center; font-family: var(--texte); color: var(--encre); }
+
+#cau-ecran .cau-carte { position: absolute; left: 420px; top: 200px; width: 760px; height: 560px; transform: rotate(-2deg); filter: drop-shadow(0 12px 22px rgba(0, 0, 0, .5)); }
+#cau-ecran.cau-2026 .cau-carte { transform: rotate(1.5deg); }
+/* Carte en image (réglages) : centrée dans la place de la carte, cadre papier, inclinée */
+#cau-ecran .cau-carte-img { position: absolute; left: 420px; top: 200px; width: 760px; height: 560px; display: flex; align-items: center; justify-content: center; transform: rotate(-2deg); }
+#cau-ecran.cau-2026 .cau-carte-img { transform: rotate(1.5deg); }
+#cau-ecran .cau-carte-cadre { position: relative; display: block; border: 10px solid #e8d9b2; box-shadow: 0 12px 22px rgba(0, 0, 0, .5); line-height: 0; }
+#cau-ecran.cau-2026 .cau-carte-cadre { border: 8px solid #ffffff; }
+#cau-ecran .cau-carte-cadre img { display: block; max-width: 740px; max-height: 540px; border: 0; }
+#cau-ecran.cau-2026 .cau-carte-cadre img { max-width: 744px; max-height: 544px; }
+#cau-ecran .cau-point { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: #9b1c14; box-shadow: 0 0 0 3px rgba(239, 226, 191, .9), 0 2px 4px rgba(0, 0, 0, .5); }
+#cau-ecran.cau-2026 .cau-point { width: 18px; height: 18px; margin: -9px 0 0 -9px; background: transparent; border: 3px solid #ff3b3b; box-sizing: border-box; box-shadow: 0 0 0 2px rgba(255, 255, 255, .8); }
+#cau-ecran.cau-2026 .cau-point::after { content: ""; position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%; background: #ff3b3b; }
+#cau-ecran .cau-coord { position: absolute; margin: -9px 0 0 14px; padding: 2px 6px; white-space: nowrap; line-height: 1.2; font-style: normal; font-family: "CAU Special Elite", monospace; font-size: 13px; color: #9b1c14; background: rgba(244, 234, 210, .92); }
+#cau-ecran.cau-2026 .cau-coord { font-family: "CAU Mono", monospace; font-weight: 600; color: #d1121c; background: rgba(255, 255, 255, .92); }
+#cau-ecran .cau-fichier { display: flex; gap: 6px; }
+#cau-ecran .cau-fichier input { flex: 1; }
+#cau-ecran .cau-fichier .cau-bouton { min-height: 36px; padding: 0 12px; }
+#cau-ecran .cau-fil { position: absolute; inset: 0; width: 1600px; height: 1000px; }
+#cau-ecran .cau-fil { pointer-events: none; filter: drop-shadow(1px 2px 1.5px rgba(0, 0, 0, .45)); }
+#cau-ecran .cau-fil path { fill: none; stroke: var(--rouge); stroke-width: 2.6; stroke-linecap: round; }
+
+/* Punaises */
+#cau-ecran .cau-pin { position: absolute; top: -8px; left: 50%; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #f07a6a, #9b1c14); box-shadow: 0 2px 3px rgba(0, 0, 0, .5); }
+#cau-ecran.cau-2026 .cau-pin { width: 16px; height: 16px; top: -9px; background: radial-gradient(circle at 35% 35%, #ff6b6b, #c1121f); }
+#cau-ecran.cau-2026 .cau-cp:nth-of-type(3n) .cau-pin { background: radial-gradient(circle at 35% 35%, #6cc3ff, #1565c0); }
+#cau-ecran.cau-2026 .cau-cp:nth-of-type(3n+1) .cau-pin { background: radial-gradient(circle at 35% 35%, #8ee28e, #2e7d32); }
+
+/* La une du journal */
+#cau-ecran .cau-une { position: absolute; left: 470px; top: 30px; width: 660px; box-sizing: border-box; padding: 12px 22px 10px; background: var(--papier); box-shadow: 0 8px 18px rgba(0, 0, 0, .5); display: flex; flex-direction: column; gap: 4px; pointer-events: auto; }
+#cau-ecran .cau-filet { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--encre); font-variant: small-caps; font-size: 15px; letter-spacing: .06em; padding-bottom: 2px; }
+#cau-ecran .cau-filet.bas { border-bottom: 0; border-top: 3px double var(--encre); padding-top: 3px; }
+#cau-ecran .cau-une h1 { margin: 0; border: 0; text-align: center; font-family: var(--tete); font-weight: 700; font-size: 50px; line-height: 1.1; color: var(--encre); }
+#cau-ecran .cau-une p { margin: 0; text-align: center; font-family: var(--titre); font-size: 19px; letter-spacing: .04em; }
+#cau-ecran.cau-2026 .cau-filet { font-variant: normal; font-family: "CAU Mono", monospace; font-size: 12px; padding-bottom: 3px; }
+#cau-ecran.cau-2026 .cau-filet.bas { border-top: 3px solid var(--encre); padding-top: 4px; }
+#cau-ecran.cau-2026 .cau-une h1 { font-weight: 900; letter-spacing: -.01em; }
+#cau-ecran.cau-2026 .cau-une p { font-family: "CAU Inter", sans-serif; font-weight: 800; font-size: 18px; letter-spacing: .02em; }
+
+/* Les coupures (boutons) */
+#cau-ecran .cau-cp {
+  position: absolute; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; text-align: left; height: auto; min-height: 0; margin: 0;
+  border: 0; border-radius: 0; cursor: pointer; padding: 14px 18px 12px; box-shadow: 0 8px 18px rgba(0, 0, 0, .55); background: var(--papier); color: var(--encre);
+  transform: rotate(var(--r, 0deg)); transition: transform .15s ease, box-shadow .15s ease; pointer-events: auto; line-height: 1.25;
+}
+/* Taille des étiquettes (réglage client « taille », 80 % par défaut) : la propriété scale s'ajoute à la rotation */
+#cau-ecran .cau-cp, #cau-ecran .cau-une { scale: var(--cau-taille, .8); transform-origin: center top; }
+#cau-ecran .cau-cp:hover, #cau-ecran .cau-cp:focus-visible { transform: rotate(0deg) translateY(-6px) scale(1.02); box-shadow: 0 16px 26px rgba(0, 0, 0, .55); outline: none; }
+#cau-ecran .cau-cp b { font-family: var(--titre); font-weight: 400; font-size: 22px; line-height: 1.15; }
+#cau-ecran.cau-2026 .cau-cp b { font-weight: 900; }
+#cau-ecran .cau-cp span { font-size: 16px; line-height: 1.3; }
+#cau-ecran.cau-2026 .cau-cp span { font-size: 15px; color: #333; }
+#cau-ecran .cau-cp small { font-variant: small-caps; letter-spacing: .08em; font-size: 13px; border-bottom: 1px solid var(--encre); width: 100%; padding-bottom: 2px; }
+#cau-ecran.cau-2026 .cau-cp small { font-variant: normal; font-family: "CAU Mono", monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #b3141c; font-weight: 600; border: 0; }
+#cau-ecran .cau-cp em { font-size: 15px; }
+#cau-ecran .cau-cp code { font-family: "CAU Special Elite", monospace; font-size: 13px; background: none; border: 0; border-top: 1px dashed #8a7a62; padding: 4px 0 0; color: inherit; }
+#cau-ecran .cau-cp.telegramme { background: #f4ead0; font-family: "CAU Special Elite", monospace; }
+#cau-ecran .cau-cp.telegramme b { font-family: "CAU Special Elite", monospace; font-size: 21px; }
+#cau-ecran .cau-cp.telegramme span { font-size: 15px; }
+#cau-ecran .cau-cp.postit { background: #fff59d; box-shadow: 0 6px 12px rgba(0, 0, 0, .35); }
+#cau-ecran .cau-cp.postit .cau-sans { font-family: "CAU Inter", sans-serif; font-weight: 800; font-size: 19px; }
+#cau-ecran .cau-cp.postit span { color: #3b3a1e; }
+#cau-ecran .cau-cp.jaune { background: #f1e6a6; }
+#cau-ecran .cau-cp.sombre { background: #1d1a17; color: #efe8d6; }
+#cau-ecran.cau-2026 .cau-cp.sombre { background: #141414; }
+#cau-ecran .cau-cp.sombre span { color: #d9d9d9; }
+#cau-ecran .cau-cp .cau-gros { font-size: 26px; }
+
+/* Photo (1933) */
+#cau-ecran .cau-cp.photo { padding: 12px 12px 10px; background: #f7f3ea; align-items: center; text-align: center; }
+#cau-ecran .cau-portrait { display: block; width: 200px; height: 200px; object-fit: cover; object-position: top; border: 0; filter: grayscale(.5) sepia(.35); background: #5c5346; }
+#cau-ecran .cau-portrait.vide svg { width: 100%; height: 100%; fill: #3e372f; }
+#cau-ecran .cau-trombi { display: flex; gap: 4px; }
+#cau-ecran .cau-trombi img { width: 52px; height: 64px; object-fit: cover; object-position: top; border: 0; filter: grayscale(.5) sepia(.3); }
+
+/* Badge (2026) et carnets : sans fond de coupure */
+#cau-ecran .cau-cp.nu { background: none; box-shadow: none; padding: 0; align-items: center; }
+#cau-ecran .cau-cp.nu:hover { box-shadow: none; }
+#cau-ecran .cau-badge { display: flex; flex-direction: column; width: 220px; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 20px rgba(0, 0, 0, .5); }
+#cau-ecran .cau-badge-tete { background: #b3141c; color: #fff !important; font-family: "CAU Mono", monospace; font-size: 11px !important; letter-spacing: .1em; padding: 6px 10px; }
+#cau-ecran .cau-badge-corps { display: flex; gap: 10px; padding: 10px; align-items: center; text-align: left; }
+#cau-ecran .cau-badge-corps img { width: 76px; height: 92px; flex: none; border-radius: 6px; object-fit: cover; object-position: top; border: 0; }
+#cau-ecran .cau-badge-corps > span { display: flex; flex-direction: column; gap: 3px; }
+#cau-ecran .cau-badge-corps b { font-family: "CAU Inter", sans-serif !important; font-weight: 800 !important; font-size: 17px !important; }
+#cau-ecran .cau-badge-corps em { font-style: normal; font-size: 13px; color: #555; }
+#cau-ecran .cau-badge-corps code { font-family: "CAU Mono", monospace; font-size: 11px; border: 0; padding: 0; color: #333; }
+#cau-ecran .cau-badge-pied { border-top: 1px solid #e3e3e3; padding: 7px 10px; font-size: 13px !important; font-weight: 600; color: #1565c0 !important; text-align: left; }
+#cau-ecran .cau-carnet { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 180px; height: 230px; border-radius: 4px 10px 10px 4px;
+  background: linear-gradient(135deg, #6b3f22, #3f2414); box-shadow: inset 10px 0 0 #2d190d, 0 10px 18px rgba(0, 0, 0, .55); }
+#cau-ecran.cau-2026 .cau-carnet { width: 170px; height: 225px; justify-content: flex-end; padding-bottom: 18px; box-sizing: border-box; background: #1e1e1e; box-shadow: 0 10px 18px rgba(0, 0, 0, .55); }
+#cau-ecran.cau-2026 .cau-carnet::after { content: ""; position: absolute; right: 18px; top: 0; bottom: 0; width: 8px; background: #b3141c; }
+#cau-ecran .cau-etiquette { background: #efe3c0; padding: 6px 10px; border: 1px solid #2a2117; font-family: "CAU Special Elite", monospace; font-size: 14px !important; color: #2a2117 !important; text-align: center; line-height: 1.2; max-width: 150px; overflow-wrap: anywhere; position: relative; z-index: 1; }
+#cau-ecran.cau-2026 .cau-etiquette { background: #fbfbf8; border: 0; font-family: "CAU Mono", monospace; font-size: 12px !important; text-transform: uppercase; }
+#cau-ecran .cau-nouveau { position: absolute; right: -14px; top: -10px; z-index: 2; background: #9b1c14; color: #fff3dc !important; font-size: 14px !important; padding: 3px 9px; border-radius: 12px; white-space: nowrap; }
+#cau-ecran.cau-2026 .cau-nouveau { background: #1565c0; color: #fff !important; font-family: "CAU Inter", sans-serif; font-weight: 600; font-size: 12px !important; }
+#cau-ecran .cau-legende { font-size: 20px !important; color: var(--encre); background: var(--papier); padding: 2px 10px; margin-top: 8px; white-space: nowrap; box-shadow: 0 3px 8px rgba(0, 0, 0, .35); }
+#cau-ecran.cau-2026 .cau-legende { font-family: "CAU Inter", sans-serif !important; font-weight: 800 !important; font-size: 18px !important; }
+
+#cau-ecran .cau-aide { position: absolute; left: 0; right: 0; bottom: 22px; margin: 0; text-align: center; font-size: 15px; pointer-events: none; }
+#cau-ecran .cau-aide span { background: rgba(255, 255, 255, .7); color: #1f2d38; padding: 3px 10px; }
+#cau-ecran.cau-2026 .cau-aide span { background: rgba(0, 0, 0, .55); color: #e8f1f7; }
+
+/* ---------------- Les pages ---------------- */
+#cau-ecran .cau-voile { position: absolute; inset: -400px; background: rgba(10, 8, 6, .55); pointer-events: auto; }
+#cau-ecran .cau-page {
+  position: absolute; left: 250px; top: 60px; width: 1100px; height: 860px; box-sizing: border-box; padding: 26px 34px; overflow-y: auto; pointer-events: auto;
+  background: var(--papier); color: var(--encre); box-shadow: 0 20px 50px rgba(0, 0, 0, .65); display: flex; flex-direction: column; gap: 14px; font-size: 17px;
+}
+#cau-ecran .cau-p-tete { display: flex; flex-direction: column; gap: 4px; }
+#cau-ecran .cau-p-tete h2 { margin: 0; border: 0; font-family: var(--titre); font-weight: 400; font-size: 36px; color: var(--encre); }
+#cau-ecran.cau-2026 .cau-p-tete h2 { font-weight: 900; }
+#cau-ecran .cau-sous { margin: 0; font-style: italic; }
+#cau-ecran .cau-retour { align-self: flex-start; width: auto; height: auto; min-height: 44px; padding: 0 14px; margin: 0 0 6px; border: 1px solid var(--encre); background: transparent; color: var(--encre); font-size: 15px; cursor: pointer; }
+#cau-ecran .cau-bouton { display: inline-flex; align-items: center; gap: 8px; width: auto; height: auto; min-height: 44px; padding: 0 16px; margin: 0; border: 1px solid #b8924a; background: #1d1a17; color: #efe3c4; font-size: 15px; cursor: pointer; line-height: 1.2; }
+#cau-ecran.cau-2026 .cau-bouton { border-radius: 8px; border-color: #3a4b5a; background: #121a22; color: #e6eef4; font-family: "CAU Inter", sans-serif; font-weight: 600; }
+#cau-ecran .cau-bouton.principal { background: #9b1c14; border-color: #e8c27a; color: #fff3dc; }
+#cau-ecran.cau-2026 .cau-bouton.principal { background: #7fb3d5; border-color: #7fb3d5; color: #0b0f14; }
+#cau-ecran .cau-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+#cau-ecran .cau-outils { display: flex; gap: 10px; flex-wrap: wrap; }
+#cau-ecran .cau-page h3 { margin: 8px 0 0; border-bottom: 1px solid var(--encre); font-family: var(--titre); font-weight: 400; font-size: 22px; color: var(--encre); }
+#cau-ecran .cau-vide, #cau-ecran .cau-consigne { margin: 0; font-style: italic; }
+#cau-ecran .cau-message { margin: 0; min-height: 1.2em; }
+#cau-ecran .cau-wiki { display: flex; gap: 18px; min-height: 0; }
+#cau-ecran .cau-wiki nav { flex: 0 0 230px; display: flex; flex-direction: column; gap: 4px; }
+#cau-ecran .cau-wiki nav button { width: 100%; height: auto; min-height: 44px; padding: 6px 10px; margin: 0; text-align: left; border: 0; border-left: 3px solid transparent; background: rgba(0, 0, 0, .05); color: var(--encre); font-size: 15px; cursor: pointer; line-height: 1.25; }
+#cau-ecran .cau-wiki nav button.on { border-left-color: var(--rouge); background: rgba(0, 0, 0, .1); font-weight: 600; }
+#cau-ecran .cau-wiki-texte { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+#cau-ecran .cau-article { background: #fffdf7; color: #1d1a17; padding: 14px 18px; border: 1px solid rgba(0, 0, 0, .15); font-size: 16px; }
+#cau-ecran .cau-article img { max-width: 100%; height: auto; border: 0; }
+#cau-ecran .cau-puces { display: flex; flex-wrap: wrap; gap: 6px; }
+#cau-ecran .cau-puce { width: auto; height: auto; min-height: 36px; padding: 2px 12px; margin: 0; border: 1px solid var(--encre); border-radius: 18px; background: transparent; color: var(--encre); font-size: 14px; cursor: pointer; }
+#cau-ecran .cau-puce.on { background: var(--encre); color: var(--papier); }
+#cau-ecran .cau-lien { align-self: flex-start; width: auto; height: auto; min-height: 36px; margin: 0; padding: 0 10px; border: 0; background: none; color: var(--rouge); font-size: 14px; cursor: pointer; text-decoration: underline; }
+#cau-ecran .cau-themes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+#cau-ecran .cau-theme { display: flex; align-items: center; gap: 12px; width: auto; height: auto; min-height: 56px; padding: 8px 14px; margin: 0; border: 1px solid rgba(0, 0, 0, .3); background: #fffdf7; color: #1d1a17; font-size: 16px; text-align: left; cursor: pointer; }
+#cau-ecran .cau-theme.on { border: 2px solid var(--rouge); font-weight: 600; }
+#cau-ecran .cau-pastille { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 2px solid #1d1a17; background: conic-gradient(#d9b34a 0 50%, #1d1a17 0); }
+#cau-ecran .cau-pastille.t-newyork { background: conic-gradient(#b8924a 0 50%, #2b2b2b 0); }
+#cau-ecran .cau-pastille.t-montagnes { background: conic-gradient(#e6eef3 0 50%, #4b6a80 0); }
+#cau-ecran .cau-pastille.t-ny2026 { background: conic-gradient(#7fb3d5 0 50%, #141414 0); }
+#cau-ecran .cau-pastille.t-antarctique2026 { background: conic-gradient(#ffffff 0 50%, #1f4f7a 0); }
+#cau-ecran .cau-pastille.t-auto { background: repeating-conic-gradient(#ccc 0 25%, #fff 0 50%); }
+#cau-ecran .cau-prepa { display: flex; flex-direction: column; gap: 10px; }
+#cau-ecran .cau-prepa fieldset { margin: 0; border: 1px solid rgba(0, 0, 0, .25); padding: 8px 14px; display: flex; flex-direction: column; gap: 4px; }
+#cau-ecran .cau-prepa legend { font-family: var(--titre); font-size: 18px; padding: 0 6px; }
+#cau-ecran .cau-prepa label, #cau-ecran .cau-cartes-liste label { display: flex; align-items: center; gap: 8px; min-height: 32px; font-size: 15px; }
+#cau-ecran .cau-prepa small { opacity: .75; }
+#cau-ecran .cau-prepa em { color: #2e6b2e; font-size: 14px; }
+#cau-ecran .cau-galerie { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; }
+#cau-ecran .cau-vignette { display: flex; flex-direction: column; align-items: center; gap: 6px; width: auto; height: auto; padding: 10px; margin: 0; border: 0; background: #fffdf7; color: #1d1a17; box-shadow: 0 4px 10px rgba(0, 0, 0, .3); cursor: pointer; font-size: 15px; line-height: 1.2; }
+#cau-ecran .cau-vignette img { width: 140px; height: 170px; object-fit: cover; object-position: top; border: 0; }
+#cau-ecran .cau-vignette code { font-family: "CAU Mono", monospace; font-size: 12px; border: 0; background: none; color: #444; }
+#cau-ecran .cau-carnet.petit { width: 110px; height: 140px; }
+#cau-ecran .cau-reglages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
+#cau-ecran .cau-reglages label { display: flex; flex-direction: column; gap: 3px; font-size: 14px; }
+#cau-ecran .cau-reglages input, #cau-ecran .cau-reglages select { height: 36px; font-size: 15px; background: #fffdf7; color: #1d1a17; border: 1px solid rgba(0, 0, 0, .35); }
+#cau-ecran select option { background: #fffdf7 !important; color: #1d1a17 !important; }
+#cau-ecran .cau-cartes-liste { columns: 2; max-height: 260px; overflow-y: auto; border: 1px solid rgba(0, 0, 0, .2); padding: 6px 10px; }
+
+/* ---------------- La vision ---------------- */
+#cau-ecran .cau-vision-voile { position: absolute; inset: -400px; background: rgba(20, 14, 8, .55); pointer-events: auto; }
+#cau-ecran.cau-2026 .cau-vision-voile { background: rgba(3, 8, 14, .6); }
+#cau-ecran .cau-vision {
+  position: absolute; left: 230px; top: 70px; width: 1140px; height: 840px; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; gap: 12px; pointer-events: auto;
+  background: linear-gradient(135deg, #2a2016, #120c07); box-shadow: 0 20px 50px rgba(0, 0, 0, .7), inset 0 0 0 2px #b8924a, inset 0 0 0 9px #2a2016, inset 0 0 0 10px #8a6d43; color: #efe3c4;
+}
+#cau-ecran.cau-2026 .cau-vision { padding: 18px; background: #0b0f14; border-radius: 28px; box-shadow: 0 20px 50px rgba(0, 0, 0, .7), inset 0 0 0 2px #2c3a47; color: #e6eef4; font-family: "CAU Inter", sans-serif; }
+#cau-ecran .cau-vision-tete { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+#cau-ecran .cau-vision-tete b { font-family: "CAU Limelight", serif; font-weight: 400; font-size: 30px; color: #e8c27a; }
+#cau-ecran.cau-2026 .cau-vision-tete b { font-family: "CAU Inter", sans-serif; font-weight: 800; font-size: 22px; letter-spacing: .04em; color: #e6eef4; }
+#cau-ecran .cau-vision-tete span { font-family: "CAU Special Elite", monospace; font-size: 14px; color: #c9b48a; text-transform: uppercase; }
+#cau-ecran.cau-2026 .cau-vision-tete span { font-family: "CAU Mono", monospace; font-size: 12px; color: #7fb3d5; text-transform: none; }
+#cau-ecran .cau-onglets { display: flex; flex-wrap: wrap; gap: 6px; }
+#cau-ecran .cau-onglets button { width: auto; height: auto; min-height: 40px; padding: 0 14px; margin: 0; border: 1px solid #8a6d43; background: #2a2016; color: #efe3c4; font-size: 15px; cursor: pointer; }
+#cau-ecran .cau-onglets button.on { background: #e8c27a; color: #1d1a17; border-color: #e8c27a; }
+#cau-ecran.cau-2026 .cau-onglets button { border: 0; border-radius: 8px; background: #1b2631; color: #a9bccb; font-family: "CAU Inter", sans-serif; font-weight: 600; font-size: 14px; }
+#cau-ecran.cau-2026 .cau-onglets button.on { background: #7fb3d5; color: #0b0f14; }
+#cau-ecran .cau-cadre { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; background: radial-gradient(ellipse at 50% 40%, #3b2f22, #120c07 80%); box-shadow: inset 0 0 60px rgba(0, 0, 0, .8); cursor: zoom-in; }
+#cau-ecran.cau-1933 .cau-cadre .cau-plateau { filter: sepia(.45) contrast(1.05); }
+#cau-ecran.cau-2026 .cau-cadre { border-radius: 14px; background: #05080b; box-shadow: inset 0 0 0 1px #2c3a47; }
+#cau-ecran .cau-cadre.zoom { cursor: grab; }
+#cau-ecran .cau-plateau { position: relative; flex: none; transform-origin: center; transition: transform .08s linear; }
+#cau-ecran .cau-plateau > img, #cau-ecran .cau-plateau > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; border: 0; user-select: none; }
+#cau-ecran .cau-tuile { position: absolute; display: block; padding: 0; margin: 0; min-height: 0; border: 0 !important; outline: none; background: none !important; box-shadow: none !important; }
+#cau-ecran .cau-tuile img, #cau-ecran .cau-tuile video { width: 100%; height: 100%; object-fit: fill; border: 0; display: block; user-select: none; pointer-events: none; }
+#cau-ecran .cau-tuile.active { cursor: pointer; }
+#cau-ecran .cau-tuile.active:hover, #cau-ecran .cau-tuile.active:focus-visible { filter: drop-shadow(0 0 8px rgba(255, 220, 150, .9)); }
+#cau-ecran.cau-2026 .cau-tuile.active:hover { filter: drop-shadow(0 0 8px rgba(111, 211, 234, .9)); }
+#cau-ecran .cau-vision-pied { display: flex; gap: 10px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+#cau-ecran .cau-vision-pied > span { margin-right: auto; font-size: 14px; font-style: italic; color: #c9b48a; }
+#cau-ecran.cau-2026 .cau-vision-pied > span { font-style: normal; color: #a9bccb; font-size: 13px; }
+
+@media (prefers-reduced-motion: reduce) { #cau-ecran * { transition: none !important; } }
+/* Les tableaux des journaux gardent leurs propres couleurs : on neutralise les rayures et fonds sombres par défaut de Foundry */
+#cau-ecran .cau-article :is(table, thead, tbody, tfoot, tr, td, th) { background-color: transparent; color: inherit; text-shadow: none; }
+#cau-ecran .cau-article table { border-collapse: collapse; background-color: transparent !important; }
+
+/* Boîte à outils */
+#cau-ecran .cau-modules { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 10px; }
+#cau-ecran .cau-module { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: rgba(255, 255, 255, .35); border: 1px solid rgba(60, 40, 20, .35); }
+#cau-ecran.cau-2026 .cau-module { background: #f4f6f8; border-color: #c9d2da; border-radius: 8px; }
+#cau-ecran .cau-module > i { flex: 0 0 34px; font-size: 22px; text-align: center; color: var(--rouge); }
+#cau-ecran .cau-module > span { flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+#cau-ecran .cau-module b { font-size: 16px; line-height: 1.2; }
+#cau-ecran .cau-module em { font-size: 14px; line-height: 1.3; font-style: normal; opacity: .85; }
+#cau-ecran .cau-module .cau-bouton { flex: 0 0 auto; min-height: 36px; padding: 0 14px; }
+#cau-ecran .cau-module small { flex: 0 0 auto; font-size: 12px; font-variant: small-caps; letter-spacing: .06em; opacity: .75; }
+#cau-ecran .cau-module.auto > i { color: inherit; opacity: .6; }
+#cau-ecran .cau-module.cache { opacity: .55; }
+#cau-ecran .cau-oeil { flex: 0 0 34px; width: 34px; height: 34px; min-height: 0; padding: 0; margin: 0; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(60, 40, 20, .4); border-radius: 50%; background: transparent; color: var(--encre); cursor: pointer; font-size: 14px; }
+#cau-ecran .cau-oeil.vu { background: var(--rouge); border-color: var(--rouge); color: #fff; }
+/* Changer la une sur place (Gardien) */
+#cau-ecran .cau-une { position: absolute; }
+#cau-ecran .cau-editer { position: absolute; right: -40px; top: 2px; width: 30px; height: 30px; min-height: 0; padding: 0; margin: 0; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(0, 0, 0, .3); border-radius: 50%; background: var(--papier); color: var(--encre); font-size: 13px; cursor: pointer; opacity: .55; }
+#cau-ecran .cau-editer:hover, #cau-ecran .cau-editer:focus-visible { opacity: 1; }
+#cau-ecran .cau-edition-une { position: absolute; left: 460px; top: 190px; width: 680px; box-sizing: border-box; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; background: var(--papier); color: var(--encre); box-shadow: 0 14px 30px rgba(0, 0, 0, .6); pointer-events: auto; z-index: 5; }
+#cau-ecran .cau-edition-une h3 { margin: 0; border-bottom: 1px solid var(--encre); font-family: var(--titre); font-weight: 400; font-size: 22px; color: var(--encre); }
+#cau-ecran .cau-reglages.un { grid-template-columns: 1fr; }
+/* Punaise toujours au-dessus du contenu de l'étiquette (carnet de bord, badge) */
+#cau-ecran .cau-cp > .cau-pin { z-index: 3; }
+/* Point rouge déplaçable par le Gardien (zone de prise élargie) */
+#cau-ecran .cau-point.deplacable { pointer-events: auto; cursor: grab; touch-action: none; z-index: 2; }
+#cau-ecran .cau-point.deplacable.prise { cursor: grabbing; }
+#cau-ecran .cau-point.deplacable::before { content: ""; position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; }
+#cau-ecran .cau-reglages input::placeholder { color: #5e5446; opacity: 1; }
+/* Seconde punaise du journal, en bas à gauche : le fil rouge y est accroché */
+/* Le Gardien dispose le fil rouge */
+#cau-ecran .cau-bouton-fil { top: 40px; }
+#cau-ecran .cau-bouton-fil.actif { opacity: 1; background: var(--rouge); border-color: var(--rouge); color: #fff; }
+#cau-ecran .cau-centre { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #f07a6a, #9b1c14); box-shadow: 0 3px 5px rgba(0, 0, 0, .55); pointer-events: none; z-index: 4; }
+#cau-ecran.cau-2026 .cau-centre { background: radial-gradient(circle at 35% 35%, #ff6b6b, #c1121f); }
+#cau-ecran .cau-fil .cau-fil-prise { stroke: transparent; stroke-width: 16; pointer-events: stroke; cursor: pointer; }
+#cau-ecran .cau-fil .cau-fil-prise:hover { stroke: rgba(255, 255, 255, .35); }
+#cau-ecran .cau-mode-fil { position: absolute; left: 330px; top: 905px; width: 940px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; padding: 10px 14px; background: #1d1a17; color: #efe3c4; box-shadow: 0 10px 24px rgba(0, 0, 0, .6); pointer-events: auto; z-index: 6; font-size: 15px; line-height: 1.3; }
+#cau-ecran.cau-2026 .cau-mode-fil { background: #121a22; color: #e6eef4; border-radius: 8px; font-family: "CAU Inter", sans-serif; }
+#cau-ecran .cau-mode-fil .cau-bouton { min-height: 34px; }
+/* En mode fil : la punaise centrale se prend, la punaise choisie est entourée */
+#cau-ecran .cau-centre.modifiable { pointer-events: auto; cursor: grab; touch-action: none; }
+#cau-ecran .cau-centre.choisie, #cau-ecran .cau-pin.choisie { outline: 3px solid #ffd54f; outline-offset: 2px; }
+/* Mise en place (Gardien) : les blocs se déplacent */
+#cau-ecran .cau-disposer > .cau-cp, #cau-ecran .cau-disposer > .cau-une, #cau-ecran .cau-disposer > .cau-carte-img, #cau-ecran .cau-disposer > .cau-carte { cursor: move; touch-action: none; }
+#cau-ecran .cau-disposer > .cau-carte-img, #cau-ecran .cau-disposer > .cau-carte { pointer-events: auto; }
+#cau-ecran .cau-disposer > .cau-cp:hover { transform: rotate(var(--r, 0deg)); }
+#cau-ecran .cau-prise { opacity: .85; outline: 2px dashed #ffd54f; outline-offset: 4px; }

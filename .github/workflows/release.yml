@@ -1,0 +1,27 @@
+# Publication d'une release (faite par Stéphane sur GitHub, tag vX.Y.Z) :
+# joint module.json et coc7-accueil-une.zip (dossier coc7-accueil-une/ à l'intérieur).
+name: Release
+on:
+  release:
+    types: [published]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Préparer le zip
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          jq --arg v "$VERSION" --arg dl "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/coc7-accueil-une.zip" \
+            '.version = $v | .download = $dl' module.json > module.tmp && mv module.tmp module.json
+          mkdir -p build/coc7-accueil-une
+          cp -r module.json scripts styles fonts assets README.md LICENSE ETAT.md build/coc7-accueil-une/
+          cd build && zip -r ../coc7-accueil-une.zip coc7-accueil-une
+      - name: Joindre à la release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            module.json
+            coc7-accueil-une.zip
