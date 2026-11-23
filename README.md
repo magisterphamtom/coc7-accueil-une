@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/banniere.png" alt="Accueil « À la une »" width="100%"></p>
+
 # CoC7 – Accueil « À la une » (1933 / 2026)
 
 Écran d'accueil plein écran, **sur fond transparent** (on voit la scène), à chaque session, pour les joueurs et le Gardien.
@@ -10,6 +12,8 @@ Une une de journal, une carte de l'Antarctique, un fil rouge et des coupures pun
 | 🪪 Ma fiche | photo punaisée | badge du Hartford Heritage Trust |
 | 📓 Mon carnet de bord | « Journal de Bord […] » | « Carnet de Bord […] » |
 
+<p align="center"><img src="docs/apercu-1933.jpg" alt="La une de 1933" width="49%"> <img src="docs/apercu-2026.jpg" alt="La une de 2026" width="49%"></p>
+
 ## Pour les joueurs
 - 🪪 **Ma fiche** : portrait, PV, SAN, Chance ; un clic ouvre la fiche (personnage de l'époque réglé dans la Bascule d'époque).
 - 📓 **Mon carnet de bord** : avec une pastille pour les pages ajoutées depuis la dernière ouverture.
@@ -19,6 +23,9 @@ Une une de journal, une carte de l'Antarctique, un fil rouge et des coupures pun
 - 🔎 **Taille des étiquettes** : réglage personnel de 50 à 100 % (80 % par défaut), pour les petits écrans.
 
 ## Pour le Gardien
+
+<p align="center"><img src="docs/apercu-mise-en-place.jpg" alt="La mise en place par le Gardien" width="70%"></p>
+
 - 🎩 Les investigateurs et les carnets de l'époque, **préparer la partie** (compendiums importés chacun dans son dossier), **le bureau du Gardien** (wiki du Gardien, boîte à outils, réglages).
 - ✏️ **Le crayon** à droite du journal : changer sur place le nom du journal, le gros titre, l'édition, la date et le lieu. La date vient du calendrier des deux époques (vide = calendrier) ; les joueurs voient le changement aussitôt.
 - 📍 **Le point rouge** de la carte : le faire glisser là où sont les joueurs ; latitude et longitude se recalculent d'après la projection de la carte (ou texte libre dans les réglages). Il n'est pas relié au fil.
