@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/banniere.png" alt="Accueil « À la une »" width="100%"></p>
+<p align="center"><a href="https://github.com/magisterphamtom/coc7-accueil-une/releases/latest"><img src="docs/banniere.png" alt="Accueil « À la une »" width="100%"></a></p>
 
 # CoC7 – Accueil « À la une » (1933 / 2026)
 
