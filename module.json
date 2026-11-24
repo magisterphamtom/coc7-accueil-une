@@ -2,7 +2,7 @@
   "id": "coc7-accueil-une",
   "title": "CoC7 – Accueil « À la une » (1933 / 2026)",
   "description": "Écran d'accueil plein écran sur fond transparent, à chaque session, suivant la Bascule d'époque : une de journal (The Arkham Advertiser / The Times), carte de l'Antarctique avec point rouge déplaçable, fil rouge et étiquettes punaisées qui ouvrent la fiche du joueur, son carnet de bord, Dramatis personae et les cartes en vision, le wiki, le thème de la fiche et la boîte à outils des modules CoC7. Le Gardien change la une sur place, dispose les étiquettes et le fil rouge, importe ses compendiums.",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "authors": [
     {
       "name": "magisterphamtom",
@@ -11,7 +11,7 @@
   ],
   "url": "https://github.com/magisterphamtom/coc7-accueil-une",
   "manifest": "https://github.com/magisterphamtom/coc7-accueil-une/releases/latest/download/module.json",
-  "download": "https://github.com/magisterphamtom/coc7-accueil-une/releases/download/v0.2.1/coc7-accueil-une.zip",
+  "download": "https://github.com/magisterphamtom/coc7-accueil-une/releases/download/v0.3.0/coc7-accueil-une.zip",
   "compatibility": {
     "minimum": "13",
     "verified": "14.368"

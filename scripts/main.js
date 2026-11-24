@@ -1,3 +1,4 @@
+import { ouvrirReglages } from "./reglages.js";
 /**
  * CoC7 – Accueil « À la une » (1933 / 2026)
  * Écran d'accueil plein écran, sur fond transparent (la scène reste visible), à chaque session, pour les joueurs
@@ -962,6 +963,7 @@ Hooks.once("ready", async () => {
 Hooks.on("getSceneControlButtons", (controls) => {
   const outils = controls?.tokens?.tools; if (!outils) return;
   outils["cau-accueil"] = { name: "cau-accueil", title: "À la une (écran d'accueil)", icon: "fa-solid fa-newspaper", order: 86, toggle: true, visible: true, active: !!EcranUne.el, onChange: (event, on) => (on ? EcranUne.ouvrir() : EcranUne.fermer()) };
+  outils["coc7-accueil-une-reglages"] = { name: "coc7-accueil-une-reglages", title: "Réglages de « À la une »", icon: "fa-solid fa-sliders", order: 88, button: true, visible: true, onChange: () => ouvrirReglages({ id: ID, titre: "Réglages de « À la une »", couleur: "#b8860b", icone: "fa-solid fa-newspaper" }) };
 });
 
 window.addEventListener("resize", foundry.utils.debounce(() => { if (EcranUne.el) EcranUne.vision ? EcranUne.afficher() : EcranUne.echelle(); }, 200));

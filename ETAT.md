@@ -70,3 +70,6 @@
 - **Mise en place** (demande de Stéphane) : dans le même mode que le fil rouge (bouton sous le crayon), le Gardien fait glisser les étiquettes, le journal et la carte où il veut ; un simple clic (sans mouvement) sert toujours au fil rouge, et le fil suit les étiquettes déplacées. Bouton « Places d'origine ». Hors de ce mode, rien ne bouge.
 - Positions enregistrées par époque dans `config` (`positions` : { clé: {x, y} } en px de l'écran 1600 × 1000 ; clés communes Gardien / joueurs), appliquées après chaque affichage, chez tout le monde.
 - Test `s-disposer.mjs` (ERA=1933 / modern) : 7 ✅ par époque.
+
+## v0.3.0 (en test)
+- Bouton « Réglages » (curseurs) dans la barre d'outils de gauche, sous le bouton de l'écran : chacun y règle son écran (style, habillage, tailles, animations…) ; le MJ / Gardien voit en plus les réglages de la table et la configuration avancée. Fichier `scripts/reglages.js`, commun aux écrans d'accueil.
