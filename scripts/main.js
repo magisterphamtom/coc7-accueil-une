@@ -1,3 +1,4 @@
+import { ouvrirReglages } from "./reglages.js";
 /**
  * CoC7 – Accueil « À la une » (1933 / 2026)
  * Écran d'accueil plein écran, sur fond transparent (la scène reste visible), à chaque session, pour les joueurs
@@ -85,6 +86,14 @@ function config() {
   const c = foundry.utils.deepClone(game.settings.get(ID, "config") ?? {});
   for (const e of ["1933", "modern"]) c[e] = { ...DEFAUTS[e], ...(c[e] ?? {}) };
   return c;
+}
+
+/** Positions des étiquettes : mes places (réglage client) par-dessus celles que le Gardien a données à tous. */
+function positions() {
+  const era = epoque();
+  const monde = config()[era].positions ?? {};
+  const mien = (game.settings.get(ID, "dispo") ?? {})[era] ?? {};
+  return { ...monde, ...mien };
 }
 
 /** Liens posés par les tuiles Monk's Active Tiles d'une scène (scènes visées, dans l'ordre de lecture). */
@@ -332,6 +341,7 @@ class EcranUne {
   static el = null;
   static editionUne = false;   // panneau « changer la une » ouvert (Gardien)
   static modeFil = false;      // le Gardien dispose le fil rouge
+  static modePerso = false;    // chacun dispose son propre écran (étiquettes, journal, carte)
   static filChoix = null;      // punaise choisie, en attente de la seconde
   static filSansClic = false;  // la punaise centrale vient d'être glissée : ignorer le clic qui suit
   static vue = "une";          // une | wiki | theme | prepa | bureau | outils | reglages | investigateurs | carnets
@@ -349,7 +359,7 @@ class EcranUne {
         if (ev.target.closest(".cau-centre")) return EcranUne.#glisserCentre(ev);
         EcranUne.#glisserBloc(ev);
       });
-      el.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && EcranUne.modeFil) { ev.stopPropagation(); EcranUne.modeFil = false; EcranUne.filChoix = null; return EcranUne.afficher(); } if (ev.key === "Escape") { ev.stopPropagation(); EcranUne.vision ? EcranUne.fermerVision() : (EcranUne.vue !== "une" ? EcranUne.afficher("une") : EcranUne.fermer()); } });
+      el.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && EcranUne.modePerso) { ev.stopPropagation(); EcranUne.modePerso = false; return EcranUne.afficher(); } if (ev.key === "Escape" && EcranUne.modeFil) { ev.stopPropagation(); EcranUne.modeFil = false; EcranUne.filChoix = null; return EcranUne.afficher(); } if (ev.key === "Escape") { ev.stopPropagation(); EcranUne.vision ? EcranUne.fermerVision() : (EcranUne.vue !== "une" ? EcranUne.afficher("une") : EcranUne.fermer()); } });
       document.body.append(el); EcranUne.el = el;
       el.focus({ preventScroll: true });
     }
@@ -431,14 +441,15 @@ class EcranUne {
   /** Applique les positions choisies par le Gardien (par époque). */
   static #placer() {
     const scene = EcranUne.el?.querySelector(".cau-scene"); if (!scene) return;
-    const pos = config()[epoque()].positions ?? {};
+    const pos = positions();
     for (const e of scene.querySelectorAll(BLOCS)) { const p = pos[cleBloc(e)]; if (p) { e.style.left = `${p.x}px`; e.style.top = `${p.y}px`; } }
-    scene.classList.toggle("cau-disposer", !!(EcranUne.modeFil && game.user.isGM));
+    scene.classList.toggle("cau-disposer", !!((EcranUne.modeFil && game.user.isGM) || EcranUne.modePerso));
   }
 
   /** Mode mise en place : faire glisser une étiquette, le journal ou la carte. Sans mouvement, c'est un clic (fil rouge). */
   static #glisserBloc(ev) {
-    if (!EcranUne.modeFil || !game.user.isGM || ev.button !== 0 || ev.target.closest(".cau-editer, .cau-mode-fil, .cau-centre, .cau-point")) return;
+    const perso = EcranUne.modePerso; if (!perso && (!EcranUne.modeFil || !game.user.isGM)) return;
+    if (ev.button !== 0 || ev.target.closest(".cau-editer, .cau-mode-fil, .cau-centre, .cau-point")) return;
     const scene = EcranUne.el.querySelector(".cau-scene");
     const bloc = [...scene.querySelectorAll(BLOCS)].find((b) => b.contains(ev.target)); if (!bloc) return;
     const k = scene.getBoundingClientRect().width / W || 1;
@@ -456,6 +467,12 @@ class EcranUne {
       if (!bouge) return;
       bloc.classList.remove("cau-prise");
       EcranUne.filSansClic = true; setTimeout(() => { EcranUne.filSansClic = false; }, 300);
+      if (perso) {
+        const d = foundry.utils.deepClone(game.settings.get(ID, "dispo") ?? {}); const era = epoque();
+        d[era] = { ...(d[era] ?? {}), [cleBloc(bloc)]: { x, y } };
+        await game.settings.set(ID, "dispo", d);
+        return;
+      }
       const all = config(); const c = all[epoque()]; c.positions = { ...(c.positions ?? {}), [cleBloc(bloc)]: { x, y } };
       await game.settings.set(ID, "config", all);
     };
@@ -586,12 +603,13 @@ class EcranUne {
     const centre = (gm && EcranUne.modeFil) || (c.fils ?? []).some((f) => f.includes("centre")) ? `<i class="cau-centre${gm && EcranUne.modeFil ? " modifiable" : ""}" style="left:${ctr.x}px;top:${ctr.y}px" title="${gm && EcranUne.modeFil ? "Punaise centrale : glisser pour la déplacer" : ""}"></i>` : "";
     const carte = c.carte ? `<div class="cau-carte-img"><span class="cau-carte-cadre"><img src="${esc(c.carte)}" alt="" draggable="false">${point}</span></div>` : (m ? CARTE_2026 : CARTE_1933);
     return `${carte}${FIL}
-      <header class="cau-une"><i class="cau-pin"></i>${gm ? `<button type="button" class="cau-editer" data-cau="editer-une" title="Changer le titre du journal"><i class="fa-solid fa-pen"></i></button><button type="button" class="cau-editer cau-bouton-fil${EcranUne.modeFil ? " actif" : ""}" data-cau="mode-fil" title="Mise en place : déplacer les étiquettes et disposer le fil rouge"><i class="fa-solid fa-diagram-project"></i></button>` : ""}
+      <header class="cau-une"><i class="cau-pin"></i><button type="button" class="cau-editer cau-bouton-dispo${gm ? " gm" : ""}${EcranUne.modePerso ? " actif" : ""}" data-cau="mode-perso" title="Disposer mon écran : déplacer les étiquettes où je veux (seulement chez moi)"><i class="fa-solid fa-up-down-left-right"></i></button>${gm ? `<button type="button" class="cau-editer" data-cau="editer-une" title="Changer le titre du journal"><i class="fa-solid fa-pen"></i></button><button type="button" class="cau-editer cau-bouton-fil${EcranUne.modeFil ? " actif" : ""}" data-cau="mode-fil" title="Mise en place : déplacer les étiquettes et disposer le fil rouge"><i class="fa-solid fa-diagram-project"></i></button>` : ""}
         <div class="cau-filet"><span>${esc(m ? (c.lieu + (date ? " · " + date : "")).toUpperCase() : c.lieu)}</span><span>${esc(m ? c.edition.toUpperCase() : (date ? date + " · " : "") + c.edition)}</span></div>
         <h1>${esc(c.journal)}</h1><p>${esc(c.une)}</p>
         <div class="cau-filet bas"><span>${esc(m ? `BIENVENUE, ${nom.toUpperCase()}` : `Bienvenue, ${nom}`)}</span><span>${esc(m ? c.campagne.toUpperCase() : c.campagne)}</span></div></header>
       ${gm && EcranUne.editionUne ? EcranUne.#editionUne(era) : ""}
-      ${centre}${gm && EcranUne.modeFil ? `<div class="cau-mode-fil"><span><b>Mise en place</b> · fais glisser une étiquette, le journal ou la carte pour les placer · fil rouge : clique une étiquette puis une autre pour les relier (la chaîne continue), clique un fil pour le couper · la grosse punaise centrale se déplace aussi</span>
+      ${centre}${EcranUne.modePerso ? `<div class="cau-mode-fil"><span><b>Disposer mon écran</b> · fais glisser une étiquette, le journal ou la carte où tu veux · cela ne change que ton écran${gm ? " (pour placer l'écran de tout le monde, utilise « Mise en place » sous le crayon)" : ""}</span>
+        <span class="cau-actions"><button type="button" class="cau-bouton" data-cau="perso-defaut">${gm ? "Mes places d'origine" : "Revenir aux places d'origine"}</button><button type="button" class="cau-bouton principal" data-cau="perso-fin"><i class="fa-solid fa-check"></i> Terminer</button></span></div>` : ""}${gm && EcranUne.modeFil ? `<div class="cau-mode-fil"><span><b>Mise en place</b> · fais glisser une étiquette, le journal ou la carte pour les placer · fil rouge : clique une étiquette puis une autre pour les relier (la chaîne continue), clique un fil pour le couper · la grosse punaise centrale se déplace aussi</span>
         <span class="cau-actions"><button type="button" class="cau-bouton" data-cau="fil-etoile">Tout relier au centre</button><button type="button" class="cau-bouton" data-cau="fil-defaut">Fils d'origine</button><button type="button" class="cau-bouton" data-cau="fil-vider">Effacer les fils</button><button type="button" class="cau-bouton" data-cau="pos-defaut">Places d'origine</button><button type="button" class="cau-bouton principal" data-cau="fil-fin"><i class="fa-solid fa-check"></i> Terminer</button></span></div>` : ""}
       ${fiche}${carnet}${dramatis}${cartes}${wiki}${resume}${theme}${prepa}${entrer}${bureau}${outils}
       <p class="cau-aide"><span>Cet écran revient à chaque séance · ${m ? "bouton journal" : "bouton journal"} de la barre de gauche pour le rouvrir · Échap pour ${m ? "se connecter" : "embarquer"}</span></p>`;
@@ -828,7 +846,8 @@ class EcranUne {
     if (EcranUne.modeFil && game.user.isGM && !ev.target.closest(".cau-page, .cau-edition-une, .cau-editer, .cau-voile")) return EcranUne.#clicFil(ev);
     const b = ev.target.closest("[data-cau]"); if (!b) return;
     ev.preventDefault(); ev.stopPropagation();
-    const a = b.dataset.cau; const era = epoque(); const c = config()[era];
+    const a = b.dataset.cau;
+    if (EcranUne.modePerso && !["mode-perso", "perso-fin", "perso-defaut", "editer-une", "mode-fil"].includes(a) && b.closest(".cau-cp, .cau-une, .cau-carte, .cau-carte-img")) return; const era = epoque(); const c = config()[era];
     const api = (id) => game.modules.get(id)?.api;
     switch (a) {
       case "une": return EcranUne.afficher("une");
@@ -852,7 +871,10 @@ class EcranUne {
       }
       case "resume": { const t = outilResume(); return t?.onChange?.(); }
       case "module": return lancerModule(Number(b.dataset.i));
-      case "mode-fil": EcranUne.modeFil = !EcranUne.modeFil; EcranUne.filChoix = null; EcranUne.editionUne = false; return EcranUne.afficher("une");
+      case "mode-perso": EcranUne.modePerso = !EcranUne.modePerso; EcranUne.modeFil = false; EcranUne.editionUne = false; return EcranUne.afficher("une");
+      case "perso-fin": EcranUne.modePerso = false; return EcranUne.afficher();
+      case "perso-defaut": { const d = foundry.utils.deepClone(game.settings.get(ID, "dispo") ?? {}); delete d[epoque()]; await game.settings.set(ID, "dispo", d); return EcranUne.afficher(); }
+      case "mode-fil": EcranUne.modePerso = false; EcranUne.modeFil = !EcranUne.modeFil; EcranUne.filChoix = null; EcranUne.editionUne = false; return EcranUne.afficher("une");
       case "editer-une": EcranUne.editionUne = !EcranUne.editionUne; return EcranUne.afficher();
       case "annuler-une": EcranUne.editionUne = false; return EcranUne.afficher();
       case "enregistrer-une": {
@@ -930,6 +952,7 @@ Hooks.once("init", () => {
     name: "Écran d'accueil à chaque session", hint: "L'écran « À la une » s'ouvre au lancement pour les joueurs et le Gardien. Il se rouvre à tout moment par le bouton journal de la barre de gauche.",
     scope: "world", config: true, type: Boolean, default: true
   });
+  game.settings.register(ID, "dispo", { scope: "client", config: false, type: Object, default: {}, onChange: () => { if (EcranUne.el) { EcranUne.afficher(); } } });
   game.settings.register(ID, "outilsJoueurs", { scope: "world", config: false, type: Array, default: null });
   game.settings.register(ID, "taille", {
     name: "Taille des étiquettes de l'accueil", hint: "Réduit ou agrandit les coupures de presse et le titre de l'écran « À la une » (en %), pour ton écran seulement.",
@@ -962,6 +985,7 @@ Hooks.once("ready", async () => {
 Hooks.on("getSceneControlButtons", (controls) => {
   const outils = controls?.tokens?.tools; if (!outils) return;
   outils["cau-accueil"] = { name: "cau-accueil", title: "À la une (écran d'accueil)", icon: "fa-solid fa-newspaper", order: 86, toggle: true, visible: true, active: !!EcranUne.el, onChange: (event, on) => (on ? EcranUne.ouvrir() : EcranUne.fermer()) };
+  outils["coc7-accueil-une-reglages"] = { name: "coc7-accueil-une-reglages", title: "Réglages de « À la une »", icon: "fa-solid fa-sliders", order: 88, button: true, visible: true, onChange: () => ouvrirReglages({ id: ID, titre: "Réglages de « À la une »", couleur: "#b8860b", icone: "fa-solid fa-newspaper" }) };
 });
 
 window.addEventListener("resize", foundry.utils.debounce(() => { if (EcranUne.el) EcranUne.vision ? EcranUne.afficher() : EcranUne.echelle(); }, 200));

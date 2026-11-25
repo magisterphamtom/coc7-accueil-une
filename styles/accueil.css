@@ -265,3 +265,8 @@
 #cau-ecran .cau-disposer > .cau-carte-img, #cau-ecran .cau-disposer > .cau-carte { pointer-events: auto; }
 #cau-ecran .cau-disposer > .cau-cp:hover { transform: rotate(var(--r, 0deg)); }
 #cau-ecran .cau-prise { opacity: .85; outline: 2px dashed #ffd54f; outline-offset: 4px; }
+
+/* Disposer mon écran (chacun pour soi) */
+#cau-ecran .cau-bouton-dispo { top: 2px; }
+#cau-ecran .cau-bouton-dispo.gm { top: 78px; }
+#cau-ecran .cau-bouton-dispo.actif { opacity: 1; background: var(--rouge); border-color: var(--rouge); color: #fff; }

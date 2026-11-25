@@ -70,3 +70,9 @@
 - **Mise en place** (demande de Stéphane) : dans le même mode que le fil rouge (bouton sous le crayon), le Gardien fait glisser les étiquettes, le journal et la carte où il veut ; un simple clic (sans mouvement) sert toujours au fil rouge, et le fil suit les étiquettes déplacées. Bouton « Places d'origine ». Hors de ce mode, rien ne bouge.
 - Positions enregistrées par époque dans `config` (`positions` : { clé: {x, y} } en px de l'écran 1600 × 1000 ; clés communes Gardien / joueurs), appliquées après chaque affichage, chez tout le monde.
 - Test `s-disposer.mjs` (ERA=1933 / modern) : 7 ✅ par époque.
+
+## v0.4.0 (25/11/2026)
+- **Disposer mon écran** (demande de Stéphane, sur le modèle de l'accueil D&D) : bouton à flèches en croix à droite du journal, pour **chaque joueur** (et le Gardien, sous le bouton de mise en place). On fait glisser les étiquettes, le journal et la carte où l'on veut ; cela ne change que son propre écran. Boutons « Revenir aux places d'origine » et « Terminer » (ou Échap).
+- Réglage client `dispo` (par époque, positions en px de l'écran 1600 × 1000). Mes places passent avant celles que le Gardien a données à tous (« Mise en place », réglage monde `config.positions`), qui restent les places par défaut des joueurs. Le fil rouge suit.
+- En mode « disposer », les étiquettes n'ouvrent pas leur page.
+- Non testé dans FoundyTest (dossier non connecté à cette session) : à tester à la main (`node --check` OK).

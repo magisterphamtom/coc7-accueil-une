@@ -21,6 +21,7 @@ Une une de journal, une carte de l'Antarctique, un fil rouge et des coupures pun
 - 📜 **La dernière séance** (Résumé des époques), 📚 **le wiki des joueurs** lu sur place, 🎨 **le thème de ma fiche**.
 - 🧰 **La boîte à outils** (« La malle à outils » en 1933) : les modules CoC7 utiles, avec un bouton « Ouvrir » ; le Gardien choisit ceux que les joueurs voient.
 - 🔎 **Taille des étiquettes** : réglage personnel de 50 à 100 % (80 % par défaut), pour les petits écrans.
+- ↔️ **Disposer mon écran** : le bouton à flèches en croix, à droite du journal, permet de déplacer les étiquettes, le journal et la carte où l'on veut. Cela ne change que son propre écran (places retenues par époque ; « Revenir aux places d'origine » pour annuler).
 
 ## Pour le Gardien
 
