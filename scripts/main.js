@@ -792,7 +792,38 @@ class EcranUne {
       const nom = joliNom(actions.map((a) => a.data?.sceneid?.name ?? a.data?.entity?.name).find(Boolean) ?? "Ouvrir");
       return `<button type="button" class="cau-tuile active" data-cau="tuile" data-scene="${ps.id}" data-tuile="${t.id}" style="${style}" aria-label="${esc(nom)}" data-tooltip="${esc(nom)}">${im}</button>`;
     }).join("");
-    return `<div class="cau-plateau" data-w="${SW}" data-h="${SH}">${media(fondScene(ps))}${tuiles}</div>`;
+    // Notes de carte (épinglettes) : mêmes règles que sur la scène — le Gardien les voit toutes,
+    // un joueur celles dont le journal (ou la page) lui est au moins visible en partie.
+    const notes = [...(ps.notes ?? [])].filter((n) => EcranUne.noteVisible(n)).map((n) => {
+      const src = n.texture?.src || "icons/svg/book.svg"; const taille = n.iconSize || 40;
+      const route = /^(https?:|data:|\/)/.test(src) ? src : foundry.utils.getRoute(src); // chemin absolu (sinon lu depuis le dossier du CSS)
+      const nom = n.label || n.text || n.page?.name || n.entry?.name || "Note";
+      const teinte = n.texture?.tint ? String(n.texture.tint.css ?? n.texture.tint) : "#ffffff";
+      const style = `left:${pc(n.x - X0, SW)};top:${pc(n.y - Y0, SH)};width:${pc(taille, SW)};height:${pc(taille, SH)};`;
+      const icone = /\.svg(\?|$)/i.test(src)
+        ? `<span class="cau-note-icone" style="-webkit-mask-image:url('${esc(route)}');mask-image:url('${esc(route)}');background-color:${esc(teinte)}"></span>`
+        : `<img src="${esc(src)}" alt="" draggable="false">`;
+      return `<button type="button" class="cau-note" data-cau="note" data-scene="${ps.id}" data-note="${n.id}" style="${style}" aria-label="${esc(nom)}" data-tooltip="${esc(nom)}">${icone}</button>`;
+    }).join("");
+    return `<div class="cau-plateau" data-w="${SW}" data-h="${SH}">${media(fondScene(ps))}${tuiles}${notes}</div>`;
+  }
+
+  /** Une note de carte est-elle visible pour cet utilisateur ? (comme Note#isVisible de Foundry, sans la vision des jetons) */
+  static noteVisible(n) {
+    if (game.user.isGM) return true;
+    if (n.hidden) return false;
+    const cible = n.page ?? n.entry;
+    return cible ? cible.testUserPermission(game.user, "LIMITED") : true;
+  }
+
+  /** Clic sur une note dans la vision : ouvre son journal à la bonne page, si on a le droit de le lire. */
+  static #note(sceneId, noteId) {
+    const n = game.scenes.get(sceneId)?.notes.get(noteId); if (!n) return;
+    const e = n.entry;
+    if (!e) return ui.notifications.info(n.label || n.text || "Note sans journal.");
+    const cible = n.page ?? e;
+    if (!cible.testUserPermission(game.user, "OBSERVER")) return ui.notifications.warn(`Tu ne peux pas encore lire « ${n.label || cible.name} ».`);
+    return e.sheet.render(true, n.page ? { pageId: n.page.id } : {});
   }
 
   static #zoom() {
@@ -810,7 +841,7 @@ class EcranUne {
       appliquer();
     }, { passive: false });
     let prise = null;
-    cadre.addEventListener("pointerdown", (ev) => { if (v.s <= 1 || ev.target.closest(".cau-tuile.active")) return; prise = { x: ev.clientX - v.x, y: ev.clientY - v.y }; cadre.setPointerCapture(ev.pointerId); });
+    cadre.addEventListener("pointerdown", (ev) => { if (v.s <= 1 || ev.target.closest(".cau-tuile.active, .cau-note")) return; prise = { x: ev.clientX - v.x, y: ev.clientY - v.y }; cadre.setPointerCapture(ev.pointerId); });
     cadre.addEventListener("pointermove", (ev) => { if (prise) { v.x = ev.clientX - prise.x; v.y = ev.clientY - prise.y; appliquer(); } });
     cadre.addEventListener("pointerup", () => { prise = null; });
     cadre.addEventListener("dblclick", () => { v.s = 1; v.x = 0; v.y = 0; appliquer(); });
@@ -868,6 +899,7 @@ class EcranUne {
       case "cartes": return EcranUne.ouvrirVision(era === "modern" ? "Cartes" : "Les cartes de l'expédition", c.cartes);
       case "onglet": EcranUne.vision.i = Number(b.dataset.i); return EcranUne.afficher();
       case "tuile": return EcranUne.#tuile(b.dataset.scene, b.dataset.tuile);
+      case "note": return EcranUne.#note(b.dataset.scene, b.dataset.note);
       case "fermer-vision": return EcranUne.fermerVision();
       case "aller": { const s = game.scenes.get(b.dataset.scene); EcranUne.fermer(); return s?.view(); }
       case "amener": {

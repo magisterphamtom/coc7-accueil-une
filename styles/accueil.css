@@ -277,3 +277,10 @@
 #cau-ecran .cau-bouton-dispo { top: 2px; }
 #cau-ecran .cau-bouton-dispo.gm { top: 78px; }
 #cau-ecran .cau-bouton-dispo.actif { opacity: 1; background: var(--rouge); border-color: var(--rouge); color: #fff; }
+/* Notes de carte (épinglettes) dans la vision */
+#cau-ecran .cau-note { position: absolute; transform: translate(-50%, -50%); display: block; padding: 0; margin: 0; min-height: 20px; min-width: 20px; border: 0 !important; background: none !important; box-shadow: none !important; cursor: pointer; z-index: 2; }
+#cau-ecran .cau-note img, #cau-ecran .cau-note-icone { display: block; width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .8)); }
+#cau-ecran .cau-note img { object-fit: contain; }
+#cau-ecran .cau-note-icone { background-color: #fff; -webkit-mask-position: center; mask-position: center; -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+#cau-ecran .cau-note:hover, #cau-ecran .cau-note:focus-visible { filter: drop-shadow(0 0 6px rgba(255, 220, 150, .95)); outline: none; }
+#cau-ecran.cau-2026 .cau-note:hover { filter: drop-shadow(0 0 6px rgba(111, 211, 234, .95)); }

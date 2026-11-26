@@ -80,3 +80,7 @@
 ## v0.4.1 (26/11/2026)
 - Réglages, « Les cartes (onglets de la vision) » : la liste des scènes était écrasée (14 px de haut, réduite à une barre de défilement horizontale) — la page la comprimait et les colonnes de type journal (`columns: 2`) débordaient sur le côté. Désormais grille à deux colonnes de 300 px de haut qui défile vers le bas, scènes cochées en tête, compteur de scènes cochées et champ « Chercher une scène… ».
 - Test FoundyTest `s-reglages-cartes.mjs` (ERA=1933 / modern) : 5 ✅ par époque (grille sans défilement horizontal, cochées en tête, filtre, lisibilité, mise en page).
+
+## v0.4.2 (26/11/2026)
+- **Notes de carte (épinglettes) dans la vision** (demande de Stéphane : les hôtels de New York épinglés sur la « Carte générale » n'apparaissaient que sur la scène). La vision dessine maintenant les notes de la scène par-dessus le fond et les tuiles : icône et teinte de la note (icônes SVG teintées par masque CSS, chemin absolu via `foundry.utils.getRoute`), taille d'après `iconSize` (20 px minimum à l'écran), nom au survol. Mêmes règles que sur la scène : le Gardien les voit toutes ; un joueur seulement celles dont le journal (ou la page) lui est au moins partiellement visible. Clic : ouvre le journal à la bonne page si on peut le lire.
+- Test FoundyTest `s-vision-notes.mjs` : Gardien (2 notes visibles, clic ouvre le journal) et joueur (seulement la note autorisée) : OK.
