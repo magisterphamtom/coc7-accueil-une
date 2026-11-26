@@ -354,6 +354,11 @@ class EcranUne {
       el.id = "cau-ecran"; el.tabIndex = -1; el.setAttribute("aria-label", "Écran d'accueil");
       el.addEventListener("click", (ev) => EcranUne.#clic(ev));
       el.addEventListener("change", (ev) => EcranUne.#champ(ev));
+      el.addEventListener("input", (ev) => { // filtre de la liste des cartes (réglages)
+        if (!ev.target.matches?.("[data-cau-filtre]")) return;
+        const q = ev.target.value.trim().toLowerCase();
+        for (const l of el.querySelectorAll(".cau-cartes-liste label")) l.hidden = !!q && !l.textContent.toLowerCase().includes(q);
+      });
       el.addEventListener("pointerdown", (ev) => {
         if (ev.target.closest(".cau-point")) return EcranUne.#glisserPoint(ev);
         if (ev.target.closest(".cau-centre")) return EcranUne.#glisserCentre(ev);
@@ -740,7 +745,9 @@ class EcranUne {
         <label>Dramatis personae : scène<select data-cau-reglage="dramatis">${opt(scenes, c.dramatis, lieu)}</select></label>
       </div>
       <h3>Les cartes (onglets de la vision)</h3>
-      <div class="cau-cartes-liste">${scenes.map((s) => `<label><input type="checkbox" data-cau-carte="${s.id}" ${c.cartes.includes(s.id) ? "checked" : ""}> ${esc(lieu(s))}</label>`).join("")}</div>
+      <p class="cau-consigne">Coche les scènes à montrer dans la vision des cartes (${c.cartes.filter((id) => game.scenes.get(id)).length} cochée(s), en tête de liste).</p>
+      <input type="search" class="cau-filtre" data-cau-filtre placeholder="Chercher une scène…" aria-label="Chercher une scène">
+      <div class="cau-cartes-liste">${[...scenes].sort((a, b) => Number(c.cartes.includes(b.id)) - Number(c.cartes.includes(a.id))).map((s) => `<label title="${esc(lieu(s))}"><input type="checkbox" data-cau-carte="${s.id}" ${c.cartes.includes(s.id) ? "checked" : ""}><span>${esc(lieu(s))}</span></label>`).join("")}</div>
       <div class="cau-actions"><button type="button" class="cau-bouton" data-cau="deviner"><i class="fa-solid fa-wand-magic-sparkles"></i> Retrouver d'après les tuiles</button><button type="button" class="cau-bouton principal" data-cau="enregistrer"><i class="fa-solid fa-floppy-disk"></i> Enregistrer</button></div><p class="cau-message"></p>`;
   }
 

@@ -76,3 +76,7 @@
 - Réglage client `dispo` (par époque, positions en px de l'écran 1600 × 1000). Mes places passent avant celles que le Gardien a données à tous (« Mise en place », réglage monde `config.positions`), qui restent les places par défaut des joueurs. Le fil rouge suit.
 - En mode « disposer », les étiquettes n'ouvrent pas leur page.
 - Non testé dans FoundyTest (dossier non connecté à cette session) : à tester à la main (`node --check` OK).
+
+## v0.4.1 (26/11/2026)
+- Réglages, « Les cartes (onglets de la vision) » : la liste des scènes était écrasée (14 px de haut, réduite à une barre de défilement horizontale) — la page la comprimait et les colonnes de type journal (`columns: 2`) débordaient sur le côté. Désormais grille à deux colonnes de 300 px de haut qui défile vers le bas, scènes cochées en tête, compteur de scènes cochées et champ « Chercher une scène… ».
+- Test FoundyTest `s-reglages-cartes.mjs` (ERA=1933 / modern) : 5 ✅ par époque (grille sans défilement horizontal, cochées en tête, filtre, lisibilité, mise en page).

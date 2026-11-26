@@ -178,7 +178,14 @@
 #cau-ecran .cau-reglages label { display: flex; flex-direction: column; gap: 3px; font-size: 14px; }
 #cau-ecran .cau-reglages input, #cau-ecran .cau-reglages select { height: 36px; font-size: 15px; background: #fffdf7; color: #1d1a17; border: 1px solid rgba(0, 0, 0, .35); }
 #cau-ecran select option { background: #fffdf7 !important; color: #1d1a17 !important; }
-#cau-ecran .cau-cartes-liste { columns: 2; max-height: 260px; overflow-y: auto; border: 1px solid rgba(0, 0, 0, .2); padding: 6px 10px; }
+#cau-ecran .cau-cartes-liste { flex: 0 0 auto; min-height: 140px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 18px; align-content: start; max-height: 300px; overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(0, 0, 0, .2); padding: 6px 10px; }
+#cau-ecran .cau-cartes-liste label { min-width: 0; }
+#cau-ecran .cau-cartes-liste label[hidden] { display: none; }
+#cau-ecran .cau-cartes-liste label > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#cau-ecran .cau-cartes-liste input[type="checkbox"] { flex: 0 0 auto; margin: 0; }
+#cau-ecran .cau-filtre { flex: 0 0 auto; width: 100%; box-sizing: border-box; height: 38px; margin: 0 0 8px; padding: 0 12px; border: 1px solid rgba(0, 0, 0, .3); background: #fffdf6; color: #1d1a17; font-size: 15px; }
+#cau-ecran.cau-2026 .cau-filtre { background: #fff; color: #11161c; border-radius: 6px; }
+#cau-ecran .cau-filtre::placeholder { color: #5e5446; opacity: 1; }
 
 /* ---------------- La vision ---------------- */
 #cau-ecran .cau-vision-voile { position: absolute; inset: -400px; background: rgba(20, 14, 8, .55); pointer-events: auto; }
