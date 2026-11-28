@@ -97,3 +97,4 @@
 - Une étiquette cachée par le Gardien n'apparaît jamais chez un joueur, même en « Disposer mon écran ». Pas de fil rouge vers une étiquette cachée.
 - Limite : « Mes compagnons » n'existe que chez les joueurs, le Gardien ne peut donc pas la cacher pour eux depuis sa mise en place.
 - Test FoundyTest `s-masquer.mjs` : Gardien 5 ✅, joueur 5 ✅.
+- Correctif (28/11, signalé par Stéphane) : l'œil ne réagissait pas au vrai clic de souris — le contenu des étiquettes ne reçoit pas les clics (`pointer-events: none`) et l'œil en héritait ; `pointer-events: auto` sur l'œil. Test à la vraie souris `s-oeil-souris.mjs` (« Disposer mon écran » et « Mise en place ») : OK. Leçon : tester les clics avec `page.mouse`, pas `el.click()`, qui ignore ce genre de blocage.
