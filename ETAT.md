@@ -84,3 +84,8 @@
 ## v0.4.2 (26/11/2026)
 - **Notes de carte (épinglettes) dans la vision** (demande de Stéphane : les hôtels de New York épinglés sur la « Carte générale » n'apparaissaient que sur la scène). La vision dessine maintenant les notes de la scène par-dessus le fond et les tuiles : icône et teinte de la note (icônes SVG teintées par masque CSS, chemin absolu via `foundry.utils.getRoute`), taille d'après `iconSize` (20 px minimum à l'écran), nom au survol. Mêmes règles que sur la scène : le Gardien les voit toutes ; un joueur seulement celles dont le journal (ou la page) lui est au moins partiellement visible. Clic : ouvre le journal à la bonne page si on peut le lire.
 - Test FoundyTest `s-vision-notes.mjs` : Gardien (2 notes visibles, clic ouvre le journal) et joueur (seulement la note autorisée) : OK.
+
+## v0.4.3 (28/11/2026)
+- **Mes compagnons** (demande de Stéphane) : nouvelle étiquette pour les joueurs, à la place de « Préparer la partie » qu'ils n'ont pas — « Mes compagnons d'expédition » en 1933, « Mes coéquipiers » en 2026, avec quatre portraits. Elle ouvre une page avec les autres investigateurs et investigatrices de l'époque (pas le sien) : portrait, nom, occupation, « Joué par … », sans caractéristiques. Un clic sur un portrait l'ouvre en grand (ImagePopout, légende nom — occupation).
+- Les personnages sont ceux de `personnagesEpoque` (type character, avec un joueur propriétaire, époque du drapeau `coc7-luck-tracker.era`, 1933 par défaut).
+- Test FoundyTest `s-equipe.mjs` (joueur, 1933 et 2026 via `s-epoque.mjs`) : 6 ✅ par époque.

@@ -594,6 +594,9 @@ class EcranUne {
     const wiki = cp("wiki", "left:880px;top:645px;width:250px;--r:2deg", m ? `<small>Enquête</small><b>Tout comprendre de l'affaire</b><span>Le wiki des joueurs, lu sur place</span>` : `<small>Dossier</small><b>Tout savoir sur l'expédition</b><span>Le wiki des joueurs, lu sur place</span>`);
     const resume = outilResume() ? cp("resume", "left:1200px;top:410px;width:270px;--r:3deg", m ? `<small>Précédemment</small><b>Le récap de la dernière séance</b><span>Ce qu'il faut retenir avant de reprendre</span>` : `<small>Édition précédente</small><b>La dernière séance</b><span>Le résumé, pour se remettre dans l'ambiance</span>`) : "";
     const theme = actif(FICHES) && (gm || perso) ? cp("theme", "left:1250px;top:640px;width:210px;--r:-2deg", m ? `<small>Style</small><b>Mon apparence</b><span>Thème de ma fiche</span>` : `<small>Mode</small><b>La mode de 1933</b><span>Thème de ma fiche</span>`) : "";
+    const autres = gm ? [] : personnagesEpoque(era).filter((a) => a.id !== perso?.id);
+    const equipe = !gm && autres.length ? cp("equipe", "left:340px;top:800px;width:270px;--r:1.5deg", `<small>${m ? "Les descendants" : "L'expédition"}</small><b>${m ? "Mes coéquipiers" : "Mes compagnons d'expédition"}</b>
+        <span class="cau-trombi">${autres.slice(0, 4).map((a) => `<img src="${esc(a.img)}" alt="">`).join("")}</span><span>${autres.length} ${m ? (autres.length > 1 ? "investigateurs et investigatrices" : "investigateur") : (autres.length > 1 ? "compagnons" : "compagnon")} — voir leurs portraits</span>`, "photo") : "";
     const prepa = gm ? cp("prepa", "left:340px;top:800px;width:270px;--r:1.5deg", `<small>${m ? "Rédaction · " : ""}Gardien</small><b>Préparer la partie</b><span>Compendiums à importer, en dossiers</span>`) : "";
     const bureau = gm ? cp("bureau", "left:990px;top:800px;width:270px;--r:2.5deg", `<small>Gardien</small><b>Le bureau du Gardien</b><span>Wiki du Gardien, outils, réglages</span>`, m ? "" : "jaune") : "";
     const nbOutils = (() => { const d = modulesDisponibles(); return d.tous.length + d.gardien.length; })();
@@ -616,7 +619,7 @@ class EcranUne {
       ${centre}${EcranUne.modePerso ? `<div class="cau-mode-fil"><span><b>Disposer mon écran</b> · fais glisser une étiquette, le journal ou la carte où tu veux · cela ne change que ton écran${gm ? " (pour placer l'écran de tout le monde, utilise « Mise en place » sous le crayon)" : ""}</span>
         <span class="cau-actions"><button type="button" class="cau-bouton" data-cau="perso-defaut">${gm ? "Mes places d'origine" : "Revenir aux places d'origine"}</button><button type="button" class="cau-bouton principal" data-cau="perso-fin"><i class="fa-solid fa-check"></i> Terminer</button></span></div>` : ""}${gm && EcranUne.modeFil ? `<div class="cau-mode-fil"><span><b>Mise en place</b> · fais glisser une étiquette, le journal ou la carte pour les placer · fil rouge : clique une étiquette puis une autre pour les relier (la chaîne continue), clique un fil pour le couper · la grosse punaise centrale se déplace aussi</span>
         <span class="cau-actions"><button type="button" class="cau-bouton" data-cau="fil-etoile">Tout relier au centre</button><button type="button" class="cau-bouton" data-cau="fil-defaut">Fils d'origine</button><button type="button" class="cau-bouton" data-cau="fil-vider">Effacer les fils</button><button type="button" class="cau-bouton" data-cau="pos-defaut">Places d'origine</button><button type="button" class="cau-bouton principal" data-cau="fil-fin"><i class="fa-solid fa-check"></i> Terminer</button></span></div>` : ""}
-      ${fiche}${carnet}${dramatis}${cartes}${wiki}${resume}${theme}${prepa}${entrer}${bureau}${outils}
+      ${fiche}${carnet}${dramatis}${cartes}${wiki}${resume}${theme}${prepa}${equipe}${entrer}${bureau}${outils}
       <p class="cau-aide"><span>Cet écran revient à chaque séance · ${m ? "bouton journal" : "bouton journal"} de la barre de gauche pour le rouvrir · Échap pour ${m ? "se connecter" : "embarquer"}</span></p>`;
   }
 
@@ -643,6 +646,7 @@ class EcranUne {
     if (vue === "outils") return tete(m ? "La boîte à outils" : "La malle à outils", game.user.isGM ? "Les modules de la table, pour les joueurs et pour toi" : "Les modules que tu peux utiliser pendant la partie") + EcranUne.#modules();
     if (vue === "theme") return tete(m ? "Mon apparence" : "La mode de 1933", "Le thème habille ta fiche d'investigateur") + EcranUne.#themes(era);
     if (vue === "prepa") return tete("Préparer la partie", "Coche les compendiums à importer : chacun arrive dans son dossier") + EcranUne.#prepa();
+    if (vue === "equipe") return tete(m ? "Mes coéquipiers" : "Mes compagnons d'expédition", m ? "Les investigateurs et investigatrices de 2025-2026" : "Les membres de l'expédition de 1933") + EcranUne.#equipe(era);
     if (vue === "investigateurs") return tete("Les investigateurs", m ? "Les descendants, en 2025-2026" : "L'expédition de 1933") + EcranUne.#investigateurs(era);
     if (vue === "carnets") return tete("Les carnets de bord", config()[era].carnet) + EcranUne.#listeCarnets(era);
     if (vue === "reglages") return tete("Réglages de l'écran d'accueil", m ? "Époque 2025-2026" : "Époque 1933") + EcranUne.#reglages(era);
@@ -720,6 +724,16 @@ class EcranUne {
     const ps = personnagesEpoque(era);
     if (!ps.length) return `<p class="cau-vide">Aucun personnage joueur pour cette époque.</p>`;
     return `<div class="cau-galerie">${ps.map((a) => { const s = stats(a); return `<button type="button" class="cau-vignette" data-cau="acteur" data-id="${a.id}"><img src="${esc(a.img)}" alt=""><b>${esc(a.name)}</b><code>PV ${s.pv} · SAN ${s.san} · CH ${s.chance}</code></button>`; }).join("")}</div>`;
+  }
+
+  /** Les autres investigateurs de l'époque, vus par un joueur : portrait, nom, occupation, joueur (pas de caractéristiques). */
+  static #equipe(era) {
+    const moi = monPersonnage(era);
+    const ps = personnagesEpoque(era).filter((a) => a.id !== moi?.id);
+    if (!ps.length) return `<p class="cau-vide">Personne d'autre pour cette époque.</p>`;
+    const joueur = (a) => game.users.find((u) => !u.isGM && a.testUserPermission(u, "OWNER"))?.name ?? "";
+    return `<p class="cau-consigne">Clique un portrait pour le voir en grand.</p><div class="cau-galerie">${ps.map((a) => { const s = stats(a); const j = joueur(a);
+      return `<button type="button" class="cau-vignette" data-cau="portrait" data-id="${a.id}"><img src="${esc(a.img)}" alt=""><b>${esc(a.name)}</b>${s.occ ? `<em>${esc(s.occ)}</em>` : ""}${j ? `<code>Joué par ${esc(j)}</code>` : ""}</button>`; }).join("")}</div>`;
   }
 
   static #listeCarnets(era) {
@@ -892,6 +906,12 @@ class EcranUne {
       case "entrer": return EcranUne.fermer();
       case "fiche": return EcranUne.#ouvrirActeur(monPersonnage(era));
       case "acteur": return EcranUne.#ouvrirActeur(game.actors.get(b.dataset.id));
+      case "portrait": {
+        const a = game.actors.get(b.dataset.id); if (!a) return;
+        const Popout = foundry.applications.apps?.ImagePopout ?? ImagePopout;
+        const legende = `${a.name}${stats(a).occ ? ` — ${stats(a).occ}` : ""}`;
+        return new Popout({ src: a.img, uuid: a.uuid, caption: legende, showTitle: true, window: { title: a.name } }).render(true);
+      }
       case "bascule": return ui.notifications.info("Le Gardien règle les personnages de chaque époque dans la Bascule d'époque.");
       case "carnet": { const j = game.journal.get(b.querySelector("[data-id]")?.dataset.id); if (!j) return; j.sheet.render(true); await EcranUne.marquerVu(j); return EcranUne.afficher(); }
       case "journal": return game.journal.get(b.dataset.id)?.sheet.render(true);
@@ -930,7 +950,7 @@ class EcranUne {
         v.has(k) ? v.delete(k) : v.add(k);
         await game.settings.set(ID, "outilsJoueurs", [...v]); return EcranUne.afficher();
       }
-      case "wiki": case "theme": case "prepa": case "bureau": case "outils": case "investigateurs": case "carnets": case "reglages":
+      case "wiki": case "theme": case "prepa": case "bureau": case "outils": case "equipe": case "investigateurs": case "carnets": case "reglages":
         if (a === "wiki") EcranUne.wiki.quel = "";
         return EcranUne.afficher(a);
       case "wiki-entree": EcranUne.wiki.entree = b.dataset.id; EcranUne.wiki.page = null; return EcranUne.afficher();

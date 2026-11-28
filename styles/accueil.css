@@ -284,3 +284,6 @@
 #cau-ecran .cau-note-icone { background-color: #fff; -webkit-mask-position: center; mask-position: center; -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
 #cau-ecran .cau-note:hover, #cau-ecran .cau-note:focus-visible { filter: drop-shadow(0 0 6px rgba(255, 220, 150, .95)); outline: none; }
 #cau-ecran.cau-2026 .cau-note:hover { filter: drop-shadow(0 0 6px rgba(111, 211, 234, .95)); }
+/* Mes compagnons (joueurs) : occupation sous le nom */
+#cau-ecran .cau-vignette em { font-size: 13px; font-style: italic; text-align: center; line-height: 1.25; color: #3b342c; }
+#cau-ecran.cau-2026 .cau-vignette em { font-style: normal; color: #44505c; }
