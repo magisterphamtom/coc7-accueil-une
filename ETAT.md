@@ -89,3 +89,11 @@
 - **Mes compagnons** (demande de Stéphane) : nouvelle étiquette pour les joueurs, à la place de « Préparer la partie » qu'ils n'ont pas — « Mes compagnons d'expédition » en 1933, « Mes coéquipiers » en 2026, avec quatre portraits. Elle ouvre une page avec les autres investigateurs et investigatrices de l'époque (pas le sien) : portrait, nom, occupation, « Joué par … », sans caractéristiques. Un clic sur un portrait l'ouvre en grand (ImagePopout, légende nom — occupation).
 - Les personnages sont ceux de `personnagesEpoque` (type character, avec un joueur propriétaire, époque du drapeau `coc7-luck-tracker.era`, 1933 par défaut).
 - Test FoundyTest `s-equipe.mjs` (joueur, 1933 et 2026 via `s-epoque.mjs`) : 6 ✅ par époque.
+
+## v0.4.4 (28/11/2026)
+- **Chacun choisit les étiquettes affichées** (demande de Stéphane). Un œil apparaît sur chaque étiquette (sauf « Embarquer / Se connecter ») :
+  - en **Disposer mon écran** (joueur ou Gardien) : cacher ou remettre une étiquette **sur son propre écran** (réglage client `masquees`, par époque) ; bouton « Tout réafficher » ;
+  - en **Mise en place** (Gardien) : cacher une étiquette **à tous les joueurs** (réglage monde `config.<époque>.cachees`) ; bouton « Tout montrer aux joueurs ». Le Gardien continue de les voir, estompées en mise en place.
+- Une étiquette cachée par le Gardien n'apparaît jamais chez un joueur, même en « Disposer mon écran ». Pas de fil rouge vers une étiquette cachée.
+- Limite : « Mes compagnons » n'existe que chez les joueurs, le Gardien ne peut donc pas la cacher pour eux depuis sa mise en place.
+- Test FoundyTest `s-masquer.mjs` : Gardien 5 ✅, joueur 5 ✅.

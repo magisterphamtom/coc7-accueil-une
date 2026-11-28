@@ -96,6 +96,15 @@ function positions() {
   return { ...monde, ...mien };
 }
 
+/** Étiquettes cachées : celles que le Gardien cache aux joueurs (monde, par époque) et les miennes (réglage client, par époque). */
+const NON_MASQUABLES = ["entrer"];
+function masquees() {
+  const era = epoque();
+  const joueurs = config()[era].cachees ?? [];
+  const miennes = (game.settings.get(ID, "masquees") ?? {})[era] ?? [];
+  return { joueurs, miennes, pourMoi: new Set([...miennes, ...(game.user.isGM ? [] : joueurs)]) };
+}
+
 /** Liens posés par les tuiles Monk's Active Tiles d'une scène (scènes visées, dans l'ordre de lecture). */
 function liens(sceneId) {
   const s = game.scenes.get(sceneId); const out = [];
@@ -399,7 +408,7 @@ class EcranUne {
     const elFil = (cle) => cle === "une" ? scene.querySelector(":scope > .cau-une > .cau-pin")
       : cle === "centre" ? scene.querySelector(":scope > .cau-centre")
       : [...scene.querySelectorAll(":scope > .cau-cp")].find((cp) => cleFil(cp) === cle)?.querySelector(":scope > .cau-pin");
-    const pos = (cle) => { const e = elFil(cle); if (!e) return null; const b = e.getBoundingClientRect(); return [(b.left + b.width / 2 - r.left) / k, (b.top + b.height / 2 - r.top) / k]; };
+    const pos = (cle) => { const e = elFil(cle); if (!e || e.closest(".cau-masquee")) return null; const b = e.getBoundingClientRect(); return [(b.left + b.width / 2 - r.left) / k, (b.top + b.height / 2 - r.top) / k]; };
     const chemins = []; const prises = [];
     (c.fils ?? []).forEach(([a, b], i) => {
       const A = pos(a); const B = pos(b); if (!A || !B) return;
@@ -449,12 +458,25 @@ class EcranUne {
     const pos = positions();
     for (const e of scene.querySelectorAll(BLOCS)) { const p = pos[cleBloc(e)]; if (p) { e.style.left = `${p.x}px`; e.style.top = `${p.y}px`; } }
     scene.classList.toggle("cau-disposer", !!((EcranUne.modeFil && game.user.isGM) || EcranUne.modePerso));
+    // Étiquettes cachées : retirées de la une ; en mode « disposer » (les miennes) ou « mise en place » (celles des joueurs), estompées avec un œil pour les montrer ou les cacher
+    const m = masquees(); const gmPlace = EcranUne.modeFil && game.user.isGM;
+    for (const cp of scene.querySelectorAll(":scope > .cau-cp")) {
+      const k = cleFil(cp); if (NON_MASQUABLES.includes(k)) continue;
+      if (!game.user.isGM && m.joueurs.includes(k)) { cp.classList.add("cau-masquee"); continue; } // cachée par le Gardien : jamais chez le joueur
+      const cachee = EcranUne.modePerso ? m.miennes.includes(k) : gmPlace ? m.joueurs.includes(k) : m.pourMoi.has(k);
+      cp.classList.toggle("cau-masquee", cachee && !EcranUne.modePerso && !gmPlace);
+      cp.classList.toggle("cau-estompee", cachee && (EcranUne.modePerso || gmPlace));
+      if (EcranUne.modePerso || gmPlace) {
+        const titre = EcranUne.modePerso ? (cachee ? "Cachée sur mon écran : cliquer pour la remettre" : "Cacher cette étiquette sur mon écran") : (cachee ? "Cachée aux joueurs : cliquer pour la leur montrer" : "Cacher cette étiquette aux joueurs");
+        cp.insertAdjacentHTML("beforeend", `<span class="cau-oeil-cp${cachee ? "" : " vu"}" role="button" tabindex="0" data-cau="cacher-cp" data-cle="${k}" title="${titre}"><i class="fa-solid ${cachee ? "fa-eye-slash" : "fa-eye"}"></i></span>`);
+      }
+    }
   }
 
   /** Mode mise en place : faire glisser une étiquette, le journal ou la carte. Sans mouvement, c'est un clic (fil rouge). */
   static #glisserBloc(ev) {
     const perso = EcranUne.modePerso; if (!perso && (!EcranUne.modeFil || !game.user.isGM)) return;
-    if (ev.button !== 0 || ev.target.closest(".cau-editer, .cau-mode-fil, .cau-centre, .cau-point")) return;
+    if (ev.button !== 0 || ev.target.closest(".cau-editer, .cau-mode-fil, .cau-centre, .cau-point, .cau-oeil-cp")) return;
     const scene = EcranUne.el.querySelector(".cau-scene");
     const bloc = [...scene.querySelectorAll(BLOCS)].find((b) => b.contains(ev.target)); if (!bloc) return;
     const k = scene.getBoundingClientRect().width / W || 1;
@@ -616,9 +638,9 @@ class EcranUne {
         <h1>${esc(c.journal)}</h1><p>${esc(c.une)}</p>
         <div class="cau-filet bas"><span>${esc(m ? `BIENVENUE, ${nom.toUpperCase()}` : `Bienvenue, ${nom}`)}</span><span>${esc(m ? c.campagne.toUpperCase() : c.campagne)}</span></div></header>
       ${gm && EcranUne.editionUne ? EcranUne.#editionUne(era) : ""}
-      ${centre}${EcranUne.modePerso ? `<div class="cau-mode-fil"><span><b>Disposer mon écran</b> · fais glisser une étiquette, le journal ou la carte où tu veux · cela ne change que ton écran${gm ? " (pour placer l'écran de tout le monde, utilise « Mise en place » sous le crayon)" : ""}</span>
-        <span class="cau-actions"><button type="button" class="cau-bouton" data-cau="perso-defaut">${gm ? "Mes places d'origine" : "Revenir aux places d'origine"}</button><button type="button" class="cau-bouton principal" data-cau="perso-fin"><i class="fa-solid fa-check"></i> Terminer</button></span></div>` : ""}${gm && EcranUne.modeFil ? `<div class="cau-mode-fil"><span><b>Mise en place</b> · fais glisser une étiquette, le journal ou la carte pour les placer · fil rouge : clique une étiquette puis une autre pour les relier (la chaîne continue), clique un fil pour le couper · la grosse punaise centrale se déplace aussi</span>
-        <span class="cau-actions"><button type="button" class="cau-bouton" data-cau="fil-etoile">Tout relier au centre</button><button type="button" class="cau-bouton" data-cau="fil-defaut">Fils d'origine</button><button type="button" class="cau-bouton" data-cau="fil-vider">Effacer les fils</button><button type="button" class="cau-bouton" data-cau="pos-defaut">Places d'origine</button><button type="button" class="cau-bouton principal" data-cau="fil-fin"><i class="fa-solid fa-check"></i> Terminer</button></span></div>` : ""}
+      ${centre}${EcranUne.modePerso ? `<div class="cau-mode-fil"><span><b>Disposer mon écran</b> · fais glisser une étiquette, le journal ou la carte où tu veux · l'œil d'une étiquette la cache ou la remet · cela ne change que ton écran${gm ? " (pour placer l'écran de tout le monde, utilise « Mise en place » sous le crayon)" : ""}</span>
+        <span class="cau-actions"><button type="button" class="cau-bouton" data-cau="tout-montrer">Tout réafficher</button><button type="button" class="cau-bouton" data-cau="perso-defaut">${gm ? "Mes places d'origine" : "Revenir aux places d'origine"}</button><button type="button" class="cau-bouton principal" data-cau="perso-fin"><i class="fa-solid fa-check"></i> Terminer</button></span></div>` : ""}${gm && EcranUne.modeFil ? `<div class="cau-mode-fil"><span><b>Mise en place</b> · fais glisser une étiquette, le journal ou la carte pour les placer · fil rouge : clique une étiquette puis une autre pour les relier (la chaîne continue), clique un fil pour le couper · la grosse punaise centrale se déplace aussi · l'œil d'une étiquette la cache aux joueurs ou la leur montre</span>
+        <span class="cau-actions"><button type="button" class="cau-bouton" data-cau="fil-etoile">Tout relier au centre</button><button type="button" class="cau-bouton" data-cau="fil-defaut">Fils d'origine</button><button type="button" class="cau-bouton" data-cau="fil-vider">Effacer les fils</button><button type="button" class="cau-bouton" data-cau="pos-defaut">Places d'origine</button><button type="button" class="cau-bouton" data-cau="tout-montrer">Tout montrer aux joueurs</button><button type="button" class="cau-bouton principal" data-cau="fil-fin"><i class="fa-solid fa-check"></i> Terminer</button></span></div>` : ""}
       ${fiche}${carnet}${dramatis}${cartes}${wiki}${resume}${theme}${prepa}${equipe}${entrer}${bureau}${outils}
       <p class="cau-aide"><span>Cet écran revient à chaque séance · ${m ? "bouton journal" : "bouton journal"} de la barre de gauche pour le rouvrir · Échap pour ${m ? "se connecter" : "embarquer"}</span></p>`;
   }
@@ -895,11 +917,11 @@ class EcranUne {
   }
 
   static async #clic(ev) {
-    if (EcranUne.modeFil && game.user.isGM && !ev.target.closest(".cau-page, .cau-edition-une, .cau-editer, .cau-voile")) return EcranUne.#clicFil(ev);
+    if (EcranUne.modeFil && game.user.isGM && !ev.target.closest(".cau-page, .cau-edition-une, .cau-editer, .cau-voile, .cau-oeil-cp")) return EcranUne.#clicFil(ev);
     const b = ev.target.closest("[data-cau]"); if (!b) return;
     ev.preventDefault(); ev.stopPropagation();
     const a = b.dataset.cau;
-    if (EcranUne.modePerso && !["mode-perso", "perso-fin", "perso-defaut", "editer-une", "mode-fil"].includes(a) && b.closest(".cau-cp, .cau-une, .cau-carte, .cau-carte-img")) return; const era = epoque(); const c = config()[era];
+    if (EcranUne.modePerso && !["mode-perso", "perso-fin", "perso-defaut", "editer-une", "mode-fil", "cacher-cp", "tout-montrer"].includes(a) && b.closest(".cau-cp, .cau-une, .cau-carte, .cau-carte-img")) return; const era = epoque(); const c = config()[era];
     const api = (id) => game.modules.get(id)?.api;
     switch (a) {
       case "une": return EcranUne.afficher("une");
@@ -930,6 +952,23 @@ class EcranUne {
       }
       case "resume": { const t = outilResume(); return t?.onChange?.(); }
       case "module": return lancerModule(Number(b.dataset.i));
+      case "cacher-cp": {
+        const k = b.dataset.cle;
+        if (EcranUne.modePerso) {
+          const d = foundry.utils.deepClone(game.settings.get(ID, "masquees") ?? {}); const l = new Set(d[era] ?? []);
+          l.has(k) ? l.delete(k) : l.add(k); d[era] = [...l]; await game.settings.set(ID, "masquees", d); return EcranUne.afficher();
+        }
+        if (EcranUne.modeFil && game.user.isGM) {
+          const all = config(); const l = new Set(all[era].cachees ?? []);
+          l.has(k) ? l.delete(k) : l.add(k); all[era].cachees = [...l]; await game.settings.set(ID, "config", all); return EcranUne.afficher();
+        }
+        return;
+      }
+      case "tout-montrer": {
+        if (EcranUne.modePerso) { const d = foundry.utils.deepClone(game.settings.get(ID, "masquees") ?? {}); delete d[era]; await game.settings.set(ID, "masquees", d); return EcranUne.afficher(); }
+        if (game.user.isGM) { const all = config(); delete all[era].cachees; await game.settings.set(ID, "config", all); return EcranUne.afficher(); }
+        return;
+      }
       case "mode-perso": EcranUne.modePerso = !EcranUne.modePerso; EcranUne.modeFil = false; EcranUne.editionUne = false; return EcranUne.afficher("une");
       case "perso-fin": EcranUne.modePerso = false; return EcranUne.afficher();
       case "perso-defaut": { const d = foundry.utils.deepClone(game.settings.get(ID, "dispo") ?? {}); delete d[epoque()]; await game.settings.set(ID, "dispo", d); return EcranUne.afficher(); }
@@ -1011,6 +1050,7 @@ Hooks.once("init", () => {
     name: "Écran d'accueil à chaque session", hint: "L'écran « À la une » s'ouvre au lancement pour les joueurs et le Gardien. Il se rouvre à tout moment par le bouton journal de la barre de gauche.",
     scope: "world", config: true, type: Boolean, default: true
   });
+  game.settings.register(ID, "masquees", { scope: "client", config: false, type: Object, default: {}, onChange: () => { if (EcranUne.el) EcranUne.afficher(); } });
   game.settings.register(ID, "dispo", { scope: "client", config: false, type: Object, default: {}, onChange: () => { if (EcranUne.el) { EcranUne.afficher(); } } });
   game.settings.register(ID, "outilsJoueurs", { scope: "world", config: false, type: Array, default: null });
   game.settings.register(ID, "taille", {
